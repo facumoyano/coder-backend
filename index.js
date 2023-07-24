@@ -1,7 +1,39 @@
+const fs = require("fs");
+const path = require("path");
+
 class ProductManager {
-  constructor() {
+  constructor(filePath) {
+    this.path = path.join(__dirname, filePath);
     this.products = [];
     this.nextId = 1;
+    this.createFileIfNotExists();
+    this.loadFromFile();
+  }
+
+  createFileIfNotExists() {
+    try {
+      fs.accessSync(this.path, fs.constants.F_OK);
+    } catch (err) {
+      fs.writeFileSync(this.path, "[]");
+    }
+  }
+
+  loadFromFile() {
+    try {
+      const data = fs.readFileSync(this.path, "utf8");
+      this.products = JSON.parse(data);
+      if (this.products.length > 0) {
+        this.nextId = this.products[this.products.length - 1].id + 1;
+      }
+    } catch (error) {
+      this.products = [];
+    }
+  }
+
+  saveToFile() {
+    const data = JSON.stringify(this.products, null, 2);
+    fs.writeFileSync(this.path, data); 
+    console.log("Datos guardados en", this.path);
   }
 
   addProduct(product) {
@@ -29,6 +61,7 @@ class ProductManager {
     };
     this.products.push(newProduct);
     console.log("Producto agregado:", newProduct);
+    this.saveToFile();
   }
 
   getProducts() {
@@ -43,9 +76,21 @@ class ProductManager {
       console.log("Producto no encontrado");
     }
   }
+
+  deleteProduct(id) {
+    const productIndex = this.products.findIndex((p) => p.id === id);
+    if (productIndex !== -1) {
+      this.products.splice(productIndex, 1);
+      console.log(`Producto con id ${id} eliminado`);
+
+      this.saveToFile();
+    } else {
+      console.log("Producto no encontrado");
+    }
+  }
 }
 
-const manager = new ProductManager();
+const manager = new ProductManager("products.json");
 
 manager.addProduct({
   title: "Producto 1",
@@ -72,3 +117,5 @@ const product1 = manager.getProductById(1);
 console.log("Producto 1:", product1);
 
 const product3 = manager.getProductById(3);
+
+manager.deleteProduct(1);
