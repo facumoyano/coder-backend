@@ -1,5 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class ProductManager {
   constructor(filePath) {
@@ -32,7 +37,7 @@ class ProductManager {
 
   saveToFile() {
     const data = JSON.stringify(this.products, null, 2);
-    fs.writeFileSync(this.path, data); 
+    fs.writeFileSync(this.path, data);
     console.log("Datos guardados en", this.path);
   }
 
@@ -90,6 +95,8 @@ class ProductManager {
   }
 }
 
+export default ProductManager;
+
 const manager = new ProductManager("products.json");
 
 manager.addProduct({
@@ -110,12 +117,11 @@ manager.addProduct({
   stock: 10,
 });
 
-const allProducts = manager.getProducts();
-console.log("Productos:", allProducts);
-
-const product1 = manager.getProductById(1);
-console.log("Producto 1:", product1);
-
-const product3 = manager.getProductById(3);
-
-manager.deleteProduct(1);
+manager.addProduct({
+  title: "Producto 3",
+  description: "Descripción del producto 3",
+  price: 30,
+  thumbnail: "url3",
+  code: "GHI789",
+  stock: 15,
+});
