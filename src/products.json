@@ -3,27 +3,27 @@
     "title": "Producto 1",
     "description": "Descripción del producto 1",
     "price": 10,
-    "thumbnail": "url1",
-    "code": "ABC123",
+    "thumbnail": [
+      "url1",
+      "url2"
+    ],
+    "code": "ABC1234",
     "stock": 5,
+    "category": "Category 1",
     "id": 1
   },
   {
     "title": "Producto 2",
     "description": "Descripción del producto 2",
     "price": 20,
-    "thumbnail": "url2",
-    "code": "DEF456",
+    "thumbnail": [
+      "url1",
+      "url2"
+    ],
+    "code": "ABC321",
     "stock": 10,
+    "category": "Category 2",
+    "status": true,
     "id": 2
-  },
-  {
-    "title": "Producto 3",
-    "description": "Descripción del producto 3",
-    "price": 30,
-    "thumbnail": "url3",
-    "code": "GHI789",
-    "stock": 15,
-    "id": 3
   }
 ]
