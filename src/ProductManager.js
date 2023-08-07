@@ -42,22 +42,9 @@ class ProductManager {
   }
 
   addProduct(product) {
-    if (
-      !product.title ||
-      !product.description ||
-      !product.price ||
-      !product.thumbnail ||
-      !product.code ||
-      !product.stock
-    ) {
-      console.log("Todos los campos son obligatorios");
-      return;
-    }
-
     const existingProduct = this.products.find((p) => p.code === product.code);
     if (existingProduct) {
-      console.log("Ya existe un producto con el mismo código");
-      return;
+      return "Ya existe un producto con el mismo código";
     }
 
     const newProduct = {
@@ -65,8 +52,9 @@ class ProductManager {
       id: this.nextId++,
     };
     this.products.push(newProduct);
-    console.log("Producto agregado:", newProduct);
     this.saveToFile();
+
+    return newProduct;
   }
 
   getProducts() {
@@ -78,7 +66,7 @@ class ProductManager {
     if (product) {
       return product;
     } else {
-      console.log("Producto no encontrado");
+      throw new Error("Producto no encontrado");
     }
   }
 
@@ -86,42 +74,27 @@ class ProductManager {
     const productIndex = this.products.findIndex((p) => p.id === id);
     if (productIndex !== -1) {
       this.products.splice(productIndex, 1);
-      console.log(`Producto con id ${id} eliminado`);
-
       this.saveToFile();
+      return `Producto con id ${id} eliminado`;
     } else {
-      console.log("Producto no encontrado");
+      throw new Error("Producto no encontrado");
+    }
+  }
+
+  updateProduct(id, product) {
+    const productIndex = this.products.findIndex((p) => p.id === id);
+    if (productIndex !== -1) {
+      const updatedProduct = {
+        ...product,
+        id,
+      };
+      this.products[productIndex] = updatedProduct;
+      this.saveToFile();
+      return `Producto con id ${id} actualizado`;
+    } else {
+      throw new Error("Producto no encontrado");
     }
   }
 }
 
 export default ProductManager;
-
-const manager = new ProductManager("products.json");
-
-manager.addProduct({
-  title: "Producto 1",
-  description: "Descripción del producto 1",
-  price: 10,
-  thumbnail: "url1",
-  code: "ABC123",
-  stock: 5,
-});
-
-manager.addProduct({
-  title: "Producto 2",
-  description: "Descripción del producto 2",
-  price: 20,
-  thumbnail: "url2",
-  code: "DEF456",
-  stock: 10,
-});
-
-manager.addProduct({
-  title: "Producto 3",
-  description: "Descripción del producto 3",
-  price: 30,
-  thumbnail: "url3",
-  code: "GHI789",
-  stock: 15,
-});

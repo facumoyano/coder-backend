@@ -1,37 +1,18 @@
 import express from "express";
-import ProductManager from "./ProductManager.js";
+import productsRouter from "./routes/products.js";
+import cartsRouter from "./routes/carts.js";
 
 const app = express();
 
-app.get("/products", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
-  const { limit } = req.query;
-  let products = manager.getProducts();
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 
-  if (limit) {
-    const limitValue = parseInt(limit, 10);
-    products = products.slice(0, limitValue);
-  }
+const PORT = 8080;
 
-  res.send(products);
-});
-
-app.get("/products/:pid", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
-
-  const productId = parseInt(req.params.pid, 10);
-  const product = manager.getProductById(productId);
-
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(404).send("Producto no encontrado");
-  }
-});
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+  console.log("Server is running on port 8080");
 });
