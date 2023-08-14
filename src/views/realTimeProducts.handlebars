@@ -1,0 +1,40 @@
+<h1 class="title">List of products (Socket)</h1>
+
+<div class="socket-container">
+    <div class="add-product-form">
+        <h2>Add New Product</h2>
+        <form method="post" id="productForm">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" required>
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" required>
+            <label for="code">Code:</label>
+            <input type="text" id="code" name="code" required>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+
+    {{#if products}}
+    <div class="product-container">
+        {{#each products}}
+        <div class="product" id="product-{{id}}">
+            <p>Name: <span>{{title}}</span></h2>
+            <p>Price: <span>{{price}}</span></p>
+            <p>Description: <span>{{description}}</span></p>
+            <button class="delete-button" data-product-id="{{id}}">Delete</button>
+        </div>
+        {{/each}}
+    </div>
+    {{else}}
+    <p>No products found</p>
+    {{/if}}
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/index.js"></script>
