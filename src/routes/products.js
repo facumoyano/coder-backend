@@ -1,34 +1,37 @@
 import { Router } from "express";
-import ProductManager from "../ProductManager.js";
+import ProductManager from "../dao/services/product/productDBService.js";
+import Product from "../dao/models/productModel.js";
 
 const router = Router();
 
 router.get("/", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
-
-  const { limit } = req.query;
-  let products = manager.getProducts();
-
-  if (limit) {
-    const limitValue = parseInt(limit, 10);
-    products = products.slice(0, limitValue);
-  }
-
-  res.send(products);
+  const manager = new ProductManager();
+  manager
+    .getProducts()
+    .then((products) => res.send(products))
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Error al cargar los productos");
+    });
 });
 
 router.get("/:pid", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
-
   const productId = parseInt(req.params.pid, 10);
-  try {
-    const product = manager.getProductById(productId);
-    res.send(product);
-  } catch (error) {
-    res.status(404).send("Producto no encontrado");
-  }
+  const manager = new ProductManager();
+
+  manager
+    .getProductById(productId)
+    .then((product) => {
+      if (product) {
+        res.send(product);
+      } else {
+        res.status(404).send("Producto no encontrado");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Error al obtener el producto");
+    });
 });
 
 router.post("/", (req, res) => {
@@ -45,20 +48,26 @@ router.post("/", (req, res) => {
     res.status(400).send("Faltan datos");
     return;
   }
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
 
-  const newProduct = {
-    ...product,
+  const newProduct = new Product({
+    title: product.title,
+    description: product.description,
+    price: product.price,
+    code: product.code,
+    stock: product.stock,
+    category: product.category,
     status: true,
-  };
+  });
 
-  try {
-    const addedProduct = manager.addProduct(newProduct);
-    res.send(addedProduct);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
+  newProduct
+    .save()
+    .then((savedProduct) => {
+      res.status(201).send(savedProduct);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Error al guardar el producto");
+    });
 });
 
 router.put("/:pid", (req, res) => {
@@ -76,29 +85,37 @@ router.put("/:pid", (req, res) => {
     return;
   }
 
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
+  const productId = req.params.pid;
+  const manager = new ProductManager();
 
-  const productId = parseInt(req.params.pid, 10);
-  try {
-    const message = manager.updateProduct(productId, product);
-    res.send(message);
-  } catch (error) {
-    res.status(404).send("Producto no encontrado");
-  }
+  manager
+    .updateProduct(productId, product)
+    .then((updatedProduct) => {
+      if (updatedProduct) {
+        res.send(updatedProduct);
+      } else {
+        res.status(404).send("Producto no encontrado");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Error al actualizar el producto");
+    });
 });
 
 router.delete("/:pid", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
+  const productId = req.params.pid;
+  const manager = new ProductManager();
 
-  const productId = parseInt(req.params.pid, 10);
-  try {
-    const message = manager.deleteProduct(productId);
-    res.send(message);
-  } catch (error) {
-    res.status(404).send("Producto no encontrado");
-  }
+  manager
+    .deleteProduct(productId)
+    .then((message) => {
+      res.send(message);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Error al eliminar el producto");
+    });
 });
 
 export default router;
