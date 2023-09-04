@@ -23,11 +23,11 @@
     {{#if products}}
     <div class="product-container">
         {{#each products}}
-        <div class="product" id="product-{{id}}">
+        <div class="product" id="product-{{_id}}">
             <p>Name: <span>{{title}}</span></h2>
             <p>Price: <span>{{price}}</span></p>
             <p>Description: <span>{{description}}</span></p>
-            <button class="delete-button" data-product-id="{{id}}">Delete</button>
+            <button class="delete-button" data-product-id="{{_id}}">Delete</button>
         </div>
         {{/each}}
     </div>

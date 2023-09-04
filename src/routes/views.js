@@ -1,15 +1,15 @@
 import { Router } from "express";
-import ProductManager from "../ProductManager.js";
+import ProductManager from "../dao/services/product/productDBService.js";
 import { io } from "../app.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
+router.get("/", async (req, res) => {
+  const manager = new ProductManager();
 
   const { limit } = req.query;
-  let products = manager.getProducts();
+  let products = await manager.getProducts();
+  products = products.map(product => product.toObject());
 
   if (limit) {
     const limitValue = parseInt(limit, 10);
@@ -19,12 +19,18 @@ router.get("/", (req, res) => {
   res.render("home", { products });
 });
 
-router.get("/realtimeproducts", (req, res) => {
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
+const messages = [];
+
+router.get("/chat", (req, res) => {
+  res.render("chat");
+});
+
+router.get("/realtimeproducts", async (req, res) => {
+  const manager = new ProductManager();
 
   const { limit } = req.query;
-  let products = manager.getProducts();
+  let products = await manager.getProducts();
+  products = products.map(product => product.toObject());
 
   if (limit) {
     const limitValue = parseInt(limit, 10);
@@ -34,7 +40,7 @@ router.get("/realtimeproducts", (req, res) => {
   res.render("realTimeProducts", { products });
 });
 
-router.post("/products", (req, res) => {
+router.post("/products", async (req, res) => {
   const product = req.body;
 
   if (
@@ -48,8 +54,7 @@ router.post("/products", (req, res) => {
     res.status(400).send("Faltan datos");
     return;
   }
-  const manager = new ProductManager("products.json");
-  manager.loadFromFile();
+  const manager = new ProductManager();
 
   const newProduct = {
     ...product,
@@ -57,7 +62,7 @@ router.post("/products", (req, res) => {
   };
 
   try {
-    const addedProduct = manager.addProduct(newProduct);
+    const addedProduct = await manager.addProduct(newProduct);
     io.emit("newProduct", addedProduct);
     res.status(201).send(addedProduct);
   } catch (error) {
@@ -66,10 +71,9 @@ router.post("/products", (req, res) => {
 });
 
 router.delete("/products/:pid", (req, res) => {
-    const manager = new ProductManager("products.json");
-    manager.loadFromFile();
+    const manager = new ProductManager();
   
-    const productId = parseInt(req.params.pid, 10);
+    const productId = req.params.pid;
     try {
       const message = manager.deleteProduct(productId);
       io.emit("productDeleted", productId);

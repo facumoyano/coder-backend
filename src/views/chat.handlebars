@@ -1,0 +1,27 @@
+<div class="chat-container">
+    <div class="chat">
+        <div class="chat-header">
+            <h1>Chat</h1>
+        </div>
+        <div class="messages" id="chatBox">
+            {{#each messages}}
+            <div class="message">
+                <p class="meta">{{this.user}} </p>
+                <p class="text">
+                    {{this.message}}
+                </p>
+            </div>
+            {{/each}}
+        </div>
+        <div class="chat-form">
+            <form id="messageForm">
+                <input type="text" name="message" id="message" placeholder="Enter Message" required autocomplete="off">
+                <button>Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/chat.js"></script>
