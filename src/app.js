@@ -7,10 +7,12 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import mongoose from 'mongoose';
 import Message from "./dao/models/messageModel.js";
+import dotenv from 'dotenv';
 
 const app = express();
+dotenv.config();
 
-const uri = "mongodb+srv://facumoyano44:OJiN4BdbTZvWQSFM@cluster0.3lix9nk.mongodb.net/ecommerce?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI;
 const PORT = 8080;
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
