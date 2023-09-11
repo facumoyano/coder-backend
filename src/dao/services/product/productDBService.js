@@ -1,3 +1,4 @@
+import { url } from "../../../utils/constants.js";
 import Product from "../../models/productModel.js";
 
 class ProductDBService {
@@ -20,12 +21,40 @@ class ProductDBService {
     }
   }
 
-  async getProducts() {
+  async getProducts(page = 1, limit = 10, sort, category, available, urlPath, title) {
     try {
-      const products = await Product.find();
-      return products;
+      const options = {
+        page,
+        limit,
+        sort: sort === 'desc' ? { price: -1 } : sort === 'asc' ? { price: 1 } : {},
+        lean: true,
+      };
+  
+      const query = {
+        ...(category && { category }),
+        ...(available !== undefined && { status: available }),
+        ...(title && { title: { $regex: new RegExp(title, 'i') } }),
+      };
+  
+      const result = await Product.paginate(query, options);
+
+      const response = {
+        status: result.docs.length > 0 ? 'success' : 'error',
+        payload: result.docs,
+        totalPages: result.totalPages,
+        prevPage: result.prevPage,
+        nextPage: result.nextPage,
+        page: result.page,
+        hasPrevPage: result.hasPrevPage,
+        hasNextPage: result.hasNextPage,
+        prevLink: result.hasPrevPage ? `${url}${urlPath}?page=${result.prevPage}` : null,
+        nextLink: result.hasNextPage ? `${url}${urlPath}?page=${result.nextPage}` : null
+      };
+
+      return response;
     } catch (error) {
       console.log(error);
+      throw new Error(error)
     }
   }
 
@@ -58,7 +87,9 @@ class ProductDBService {
 
   async updateProduct(id, productData) {
     try {
-      const product = await Product.findByIdAndUpdate(id, productData, { new: true });
+      const product = await Product.findByIdAndUpdate(id, productData, {
+        new: true,
+      });
       if (product) {
         return product;
       } else {

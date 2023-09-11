@@ -13,6 +13,33 @@
 
 body {
   font-family: "Inter", sans-serif;
+  background-color: #edeff4;
+}
+
+.button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #111;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+    border: 1px solid #111;
+    transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: #fff;
+    color: #111;
+}
+
+input, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
 }
 
 .header {
@@ -57,26 +84,54 @@ body {
     padding: 20px 0;
 }
 
-.product-container {
+.pagination {
     display: flex;
-    flex-direction: column;
+    gap: 16px;
+    margin: 40px 0;
+}
+
+.pagination a {
+    color: #111;
+}
+
+/* Products page */
+.form-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 36px;
+    gap: 8px;
+}
+
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     align-items: center;
     gap: 16px;
 }
 
-.product-container .product h2,p {
-    font-weight: 700;
-    font-size: 20px;
-}
-
-.product-container .product h2,p span{
-    font-weight: 400;
-    font-size: 16px;
-}
-
 .product {
-    width: 400px;
+    max-width: 350px;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product img {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.product .product-title {
+    font-weight: 700;
+    font-size: 18px;
 }
 
 .product .delete-button {
@@ -86,10 +141,30 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease-in-out;
 }
 
+.product .delete-button:hover {
+    background-color: #ff4d4d;
+    
+}
+
+/* ADMIN PRODUCT PAGE */
 .socket-container {
     display: flex;
+    flex-direction: column;
+    gap: 100px;
+}
+
+.socket-container .add-product-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.socket-container h2{
+   text-align: center;
+   margin: 16px 0;
 }
 
 .socket-container .add-product-form form {
@@ -102,23 +177,56 @@ body {
     margin-top: 4px;
 }
 
-.socket-container .add-product-form form input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.socket-container .add-product-form form button {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #111;
-    color: #fff;
-    font-size: 16px;
-}
-
 .socket-container .product-container, .add-product-form {
     width: 100%;
+}
+
+/* PRODUCT DETAILS PAGE */
+.product-details {
+    display: flex;
+    gap: 36px;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;    
+}
+
+.product-details img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.product-details-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-details-info p {
+    font-weight: 700;
+}
+
+.product-details-info span {
+    font-weight: 400;
+    color: #666;
+}
+
+/* CART PAGE */
+.total {
+    font-weight: 700;
+    font-size: 18px;
+    margin: 16px 0;
+}
+
+.total span {
+    font-weight: 400;
+}
+
+/* CHAT PAGE */
+.chat input {
+
 }
 

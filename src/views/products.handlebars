@@ -1,0 +1,48 @@
+<h1 class="title">List of products</h1>
+
+<form action="/products" method="GET" class="form-filters">
+  <input type="text" name="title" placeholder="Search products">
+
+  <select name="sort">
+    <option value="">Sort by Price</option>
+    <option value="asc">Low to High</option>
+    <option value="desc">High to Low</option>
+  </select>
+
+  <select name="category">
+    <option value="">Category</option>
+    <option value="Gamers">Gamers</option>
+    <option value="Laptops">Laptops</option>
+  </select>
+
+  <button type="submit" class="button">Search</button>
+</form>
+
+{{#if (eq result.status 'success')}}
+  <div class="product-container">
+    {{#each result.payload}}
+      <div class="product">
+        {{#if this.thumbnails}}
+          {{#if (first this.thumbnails)}}
+            <img src="{{first this.thumbnails}}" alt="Product thumbnail" />
+          {{/if}}
+        {{/if}}
+        <p class="product-title">{{this.title}}</p>
+        <p class="product-price">${{this.price}}</p>
+        <a href="/products/{{this._id}}" class="button">View Details</a>
+      </div>
+    {{/each}}
+  </div>
+  <div class="pagination">
+    <span class="page">{{result.page}}</span>
+    {{#if result.hasNextPage}}
+      <a href={{result.nextLink}}>Next page</a>
+    {{/if}}
+    {{#if result.hasPrevPage}}
+      <a href={{result.prevLink}}>Previous page</a>
+    {{/if}}
+  </div>
+{{else}}
+  <p>No products found</p>
+{{/if}}
+

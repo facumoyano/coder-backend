@@ -16,20 +16,36 @@
             <input type="text" id="category" name="category" required>
             <label for="code">Code:</label>
             <input type="text" id="code" name="code" required>
-            <button type="submit">Add Product</button>
+            <label for="thumbnail">Thumbnail:</label>
+            <input type="text" id="thumbnails" name="thumbnails">
+            <button type="submit" class="button">Add Product</button>
         </form>
     </div>
 
-    {{#if products}}
+    {{#if (eq result.status 'success')}}
     <div class="product-container">
-        {{#each products}}
+        {{#each result.payload}}
         <div class="product" id="product-{{_id}}">
-            <p>Name: <span>{{title}}</span></h2>
-            <p>Price: <span>{{price}}</span></p>
-            <p>Description: <span>{{description}}</span></p>
-            <button class="delete-button" data-product-id="{{_id}}">Delete</button>
+            {{#if this.thumbnails}}
+                {{#if (first this.thumbnails)}}
+                    <img src="{{first this.thumbnails}}" alt="Product thumbnail" />
+                {{/if}}
+            {{/if}}
+            <p>Name: <span>{{this.title}}</span></h2>
+            <p>Price: <span>{{this.price}}</span></p>
+            <a href="/products/{{this._id}}" class="button">View Details</a>
+            <button class="delete-button" data-product-id="{{this._id}}">Delete</button>
         </div>
         {{/each}}
+    </div>
+    <div class="pagination">
+        <span class="page">{{result.page}}</span>
+        {{#if result.hasNextPage}}
+            <a href={{result.nextLink}}>Next page</a>
+        {{/if}}
+        {{#if result.hasPrevPage}}
+            <a href={{result.prevLink}}>Previous page</a>
+        {{/if}}
     </div>
     {{else}}
     <p>No products found</p>

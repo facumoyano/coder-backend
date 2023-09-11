@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const messageSchema = new mongoose.Schema({
     user: {
@@ -13,6 +14,8 @@ const messageSchema = new mongoose.Schema({
         type: Date,
     }
 });
+
+messageSchema.plugin(mongoosePaginate);
 
 const Message = mongoose.model('messages', messageSchema);
 
