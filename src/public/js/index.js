@@ -22,6 +22,7 @@ async function handleProductSubmission(event) {
     stock: formData.get("stock"),
     category: formData.get("category"),
     code: formData.get("code"),
+    thumbnails: formData.getAll("thumbnails"),
   };
 
   try {
@@ -55,7 +56,14 @@ function createProductElement(product) {
   const productDiv = document.createElement("div");
   productDiv.classList.add("product");
   productDiv.setAttribute("id", `product-${product.id}`);
+
+  let thumbnailHTML = '';
+  if (product.thumbnails && product.thumbnails[0]) {
+    thumbnailHTML = `<img src="${product.thumbnails[0]}" alt="Product thumbnail">`;
+  }
+
   productDiv.innerHTML = `
+      ${thumbnailHTML}
       <p>Name: <span>${product.title}</span></p>
       <p>Price: <span>${product.price}</span></p>
       <p>Description: <span>${product.description}</span></p>

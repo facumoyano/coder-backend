@@ -1,22 +1,36 @@
 import { Router } from "express";
 import ProductManager from "../dao/services/product/productDBService.js";
+import CartManager from "../dao/services/cart/cartDBService.js";
 import { io } from "../app.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const manager = new ProductManager();
+  res.render("home");
+});
 
-  const { limit } = req.query;
-  let products = await manager.getProducts();
-  products = products.map(product => product.toObject());
-
-  if (limit) {
-    const limitValue = parseInt(limit, 10);
-    products = products.slice(0, limitValue);
+router.get("/products", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort, category, available, title } = req.query;
+    const manager = new ProductManager();
+    const result = await manager.getProducts(page, limit, sort, category, available, 'products', title);
+  
+    res.render("products", { result });
+  } catch (error) {
+    console.log(error)
   }
+});
 
-  res.render("home", { products });
+router.get("/products/:pid", async (req, res) => {
+  const manager = new ProductManager();
+  const product = await manager.getProductById(req.params.pid);
+  res.render("product", { product });
+});
+
+router.get("/carts/:cid", async (req, res) => {
+  const manager = new CartManager();
+  const cart = await manager.getCartById(req.params.cid);
+  res.render("cart", { cart });
 });
 
 const messages = [];
@@ -26,18 +40,15 @@ router.get("/chat", (req, res) => {
 });
 
 router.get("/realtimeproducts", async (req, res) => {
-  const manager = new ProductManager();
-
-  const { limit } = req.query;
-  let products = await manager.getProducts();
-  products = products.map(product => product.toObject());
-
-  if (limit) {
-    const limitValue = parseInt(limit, 10);
-    products = products.slice(0, limitValue);
+  try {
+    const { page = 1, limit = 10, sort, category, available } = req.query;
+    const manager = new ProductManager();
+    const result = await manager.getProducts(page, limit, sort, category, available, 'realtimeproducts');
+  
+    res.render("realTimeProducts", { result });
+  } catch (error) {
+    console.log(error)
   }
-
-  res.render("realTimeProducts", { products });
 });
 
 router.post("/products", async (req, res) => {

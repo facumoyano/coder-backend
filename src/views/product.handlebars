@@ -1,0 +1,48 @@
+<h1 class="title">Product details</h1>
+<div class="product-details">
+  <div>
+    {{#if product.thumbnails}}
+      {{#if (first product.thumbnails)}}
+        <img src="{{first product.thumbnails}}" alt="Product thumbnail" />
+      {{/if}}
+    {{/if}}
+  </div>
+  <div class="product-details-info" data-id="{{product._id}}">
+    <h2>{{product.title}}</h2>
+    <p>Price: <span>${{product.price}}</span></p>
+    <p>Description: <span>{{product.description}}</span></p>
+    <p>Stock: <span>{{product.stock}}</span></p>
+    <p>Category: <span>{{product.category}}</span></p>
+    <p>Code: <span>{{product.code}}</span></p>
+      {{#if (gt product.stock 0)}}
+        <button id="add-to-cart" class="button">Add to Cart</button>
+      {{else}}
+        <p style="color: #fc0909; font-weight: 400;">No stock available</p>
+      {{/if}}
+      </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() { 
+    $('#add-to-cart').click(function() { 
+      const productId = $('.product-details-info').data('id'); 
+      $.ajax({ 
+        url: `http://localhost:8080/api/carts/64f5f52356eda0ccb263fdd2/products/${productId}`,
+        type: 'POST',
+        contentType: 'application/json',
+        success: function(response) {
+          Swal.fire({
+            title: 'Product added to cart',
+            icon: 'success',
+            confirmButtonText: 'Ok'
+          });
+        }, 
+        error: function(error) {
+          console.log(error); alert('Error al agregar el producto al carrito'); 
+          } 
+        });
+      }); 
+   });
+</script>

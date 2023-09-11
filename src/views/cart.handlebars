@@ -1,0 +1,92 @@
+<h1 class="title">Cart</h1>
+<ul>
+  <span class="total">Total: </span>
+  {{#if cart.products.length}}
+   <div class="product-container">
+    {{#each cart.products}}
+      <div class="product">
+        {{#if this.productId.thumbnails}}
+          {{#if (first this.productId.thumbnails)}}
+            <img src="{{first this.productId.thumbnails}}" alt="Product thumbnail" />
+          {{/if}}
+        {{/if}}
+        <p class="product-title">{{this.productId.title}}</p>
+        <p class="product-price">${{this.productId.price}}</p>
+        <p class="product-quantity">Quantity: {{this.quantity}}</p>
+        <a href="/products/{{this.productId._id}}" class="button">View Details</a>
+        <button class="delete-button" data-product-id="{{this.productId._id}}">Remove from Cart</button>
+      </div>
+    {{/each}}
+  </div>
+  <button class="button" id="empty-cart" style="margin-top: 20px;">
+    Empty Cart
+  </button>
+  {{else}}
+    <p>No products added yet</p>
+  {{/if}}
+</ul>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Calcula el total de productos
+  const prices = document.querySelectorAll('.product-price');
+  const quantities = document.querySelectorAll('.product-quantity');
+  let total = Array.from(prices).reduce((total, product, index) => {
+    const quantity = Number(quantities[index].textContent.replace('Quantity: ', ''));
+    return total + Number(product.textContent.replace('$', '')) * quantity;
+  }, 0);
+  document.querySelector('.total').innerHTML += `<span>$${total.toFixed(2)}</span>`;
+
+  // Elimina un producto del carrito
+  const deleteButtons = document.querySelectorAll('.delete-button');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const productId = button.dataset.productId;
+      const response = await fetch(`http://localhost:8080/api/carts/64f5f52356eda0ccb263fdd2/products/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const result = await response.json();
+      if (result.success === true) {
+        Swal.fire({
+          title: 'Product removed from cart',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        console.log(result);
+        alert('Error al eliminar el producto del carrito');
+      }
+    });
+  });
+
+  // Vacía el carrito
+  const emptyCartButton = document.querySelector('#empty-cart');
+  emptyCartButton.addEventListener('click', async () => {
+    const response = await fetch('http://localhost:8080/api/carts/64f5f52356eda0ccb263fdd2', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const result = await response.json();
+    if (result.success === true) {
+      Swal.fire({
+        title: 'Cart emptied',
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } else {
+      console.log(result);
+      alert('Error al vaciar el carrito');
+    }
+  });
+</script>

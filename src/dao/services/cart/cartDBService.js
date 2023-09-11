@@ -15,9 +15,18 @@ class CartDBService {
     }
   }
 
-  async getCartById(id) {
+  async getAllCarts() {
     try {
-      const cart = await Cart.findById(id);
+      const carts = await Cart.find().populate('products');
+      return carts;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getCartById(cartId) {
+    try {
+      const cart = await Cart.findById(cartId).populate('products.productId');
       return cart;
     } catch (error) {
       console.log(error);
@@ -28,14 +37,83 @@ class CartDBService {
     try {
       const cart = await Cart.findById(id);
       if (cart) {
-        const productInCart = cart.products.find(p => p.productId.toString() === productId);
-  
+        const productInCart = cart.products.find(
+          (p) => p.productId.toString() === productId
+        );
+
         if (productInCart) {
           productInCart.quantity += quantity;
         } else {
           cart.products.push({ productId, quantity });
         }
-  
+
+        await cart.save();
+        return cart;
+      } else {
+        throw new Error("Carrito no encontrado");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async removeProductFromCart(cartId, productId) {
+    try {
+      const cart = await Cart.findById(cartId);
+      if (cart) {
+        cart.products = cart.products.filter(
+          (p) => p.productId.toString() !== productId
+        );
+        await cart.save();
+        return cart;
+      } else {
+        throw new Error("Carrito no encontrado");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateCart(cartId, products) {
+    try {
+      const cart = await Cart.findById(cartId);
+      if (cart) {
+        cart.products = products;
+        await cart.save();
+        return cart;
+      } else {
+        throw new Error("Carrito no encontrado");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateProductQuantity(cartId, productId, quantity) {
+    try {
+      const cart = await Cart.findById(cartId);
+      if (cart) {
+        const productInCart = cart.products.find(
+          (p) => p.productId.toString() === productId
+        );
+        if (productInCart) {
+          productInCart.quantity = quantity;
+          await cart.save();
+        }
+        return cart;
+      } else {
+        throw new Error("Carrito no encontrado");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async clearCart(cartId) {
+    try {
+      const cart = await Cart.findById(cartId);
+      if (cart) {
+        cart.products = [];
         await cart.save();
         return cart;
       } else {

@@ -1,7 +1,11 @@
 <div class="chat-container">
     <div class="chat">
-        <div class="chat-header">
-            <h1>Chat</h1>
+        <h1 class="title">Chat</h1>
+        <div class="chat-form">
+            <form id="messageForm">
+                <input type="text" name="message" id="message" placeholder="Enter Message" required autocomplete="off">
+                <button class="button">Send</button>
+            </form>
         </div>
         <div class="messages" id="chatBox">
             {{#each messages}}
@@ -12,12 +16,6 @@
                 </p>
             </div>
             {{/each}}
-        </div>
-        <div class="chat-form">
-            <form id="messageForm">
-                <input type="text" name="message" id="message" placeholder="Enter Message" required autocomplete="off">
-                <button>Send</button>
-            </form>
         </div>
     </div>
 </div>
