@@ -27,6 +27,9 @@ class CartDBService {
   async getCartById(cartId) {
     try {
       const cart = await Cart.findById(cartId).populate('products.productId');
+      if (!cart) {
+        throw new Error("Cart not found");
+      }
       return cart;
     } catch (error) {
       console.log(error);
@@ -50,7 +53,7 @@ class CartDBService {
         await cart.save();
         return cart;
       } else {
-        throw new Error("Carrito no encontrado");
+        throw new Error("Cart not found");
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +70,7 @@ class CartDBService {
         await cart.save();
         return cart;
       } else {
-        throw new Error("Carrito no encontrado");
+        throw new Error("Cart not found");
       }
     } catch (error) {
       console.log(error);
@@ -82,7 +85,7 @@ class CartDBService {
         await cart.save();
         return cart;
       } else {
-        throw new Error("Carrito no encontrado");
+        throw new Error("Cart not found");
       }
     } catch (error) {
       console.log(error);
@@ -99,10 +102,12 @@ class CartDBService {
         if (productInCart) {
           productInCart.quantity = quantity;
           await cart.save();
+        } else {
+          throw new Error("Product not found in cart");
         }
         return cart;
       } else {
-        throw new Error("Carrito no encontrado");
+        throw new Error("Cart not found");
       }
     } catch (error) {
       console.log(error);
@@ -117,7 +122,7 @@ class CartDBService {
         await cart.save();
         return cart;
       } else {
-        throw new Error("Carrito no encontrado");
+        throw new Error("Cart not found");
       }
     } catch (error) {
       console.log(error);
