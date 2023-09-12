@@ -8,12 +8,12 @@ router.get("/", async (req, res) => {
   const manager = new ProductManager();
   try {
     const { page = 1, limit = 10, sort, category, available, title } = req.query;
-  const manager = new ProductManager();
-  const products = await manager.getProducts(page, limit, sort, category, available, 'products', title );
+    const manager = new ProductManager();
+    const products = await manager.getProducts(page, limit, sort, category, available, 'products', title );
     res.send(products);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al cargar los productos");
+    res.status(500).send("Error to get the Products");
   }
 });
 
@@ -25,11 +25,11 @@ router.get("/:pid", async (req, res) => {
     if (product) {
       res.send(product);
     } else {
-      res.status(404).send("Producto no encontrado");
+      res.status(404).send("Product not found");
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al obtener el producto");
+    res.status(500).send("Error to get the Product");
   }
 });
 
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
     !product.stock ||
     !product.category
   ) {
-    res.status(400).send("Faltan datos");
+    res.status(400).send("Fields are missing");
     return;
   }
   const newProduct = new Product({
@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
     res.status(201).send(savedProduct);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al guardar el producto");
+    res.status(500).send("Error to save the Product");
   }
 });
 
@@ -73,7 +73,7 @@ router.put("/:pid", async (req, res) => {
     !product.code ||
     !product.category
   ) {
-    res.status(400).send("Faltan datos");
+    res.status(400).send("Fields are missing");
     return;
   }
   const productId = req.params.pid;
@@ -83,11 +83,11 @@ router.put("/:pid", async (req, res) => {
     if (updatedProduct) {
       res.send(updatedProduct);
     } else {
-      res.status(404).send("Producto no encontrado");
+      res.status(404).send("Product not found");
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al actualizar el producto");
+    res.status(500).send("Error to update the Product");
   }
 });
 
@@ -99,7 +99,7 @@ router.delete("/:pid", async (req, res) => {
     res.send(message);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al eliminar el producto");
+    res.status(500).send("Error to delete the Product");
   }
 });
 

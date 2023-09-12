@@ -6,7 +6,7 @@ class ProductDBService {
     try {
       const existingProduct = await Product.findOne({ code: product.code });
       if (existingProduct) {
-        return "Ya existe un producto con el mismo código";
+        return "A product with the same code already exists";
       }
 
       const newProduct = new Product({
@@ -65,7 +65,7 @@ class ProductDBService {
       if (product) {
         return product;
       } else {
-        throw new Error("Producto no encontrado");
+        throw new Error("Product not found");
       }
     } catch (error) {
       console.log(error);
@@ -76,9 +76,9 @@ class ProductDBService {
     try {
       const product = await Product.findByIdAndDelete(id);
       if (product) {
-        return `Producto con id ${id} eliminado`;
+        return `Product with id ${id} deleted`;
       } else {
-        throw new Error("Producto no encontrado");
+        throw new Error("Product not found");
       }
     } catch (error) {
       console.log(error);
@@ -93,7 +93,7 @@ class ProductDBService {
       if (product) {
         return product;
       } else {
-        throw new Error("Producto no encontrado");
+        throw new Error("Product not found");
       }
     } catch (error) {
       console.log(error);

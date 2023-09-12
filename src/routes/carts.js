@@ -11,18 +11,22 @@ router.post("/", async (_req, res) => {
       res.send(cart);
    } catch (error) {
      console.log(error)
-      res.status(500).send("Error al crear el carrito");
+      res.status(500).send("Error creating cart");
    }
 });
 
 // Obtener carrito por id
 router.get("/:cid", async (req, res) => {
-  const cartId = req.params.cid;
-  const cart = await cartManager.getCartById(cartId);
-  if (cart) {
-    res.send(cart);
-  } else {
-    res.status(404).send("Carrito no encontrado");
+  try {
+    const cartId = req.params.cid;
+    const cart = await cartManager.getCartById(cartId);
+    if (cart) {
+      res.send(cart);
+    } else {
+      res.status(404).send("Carrito not found");
+    }
+  } catch (error) {
+    res.status(500).send("Error to get the Cart");
   }
 });
 
@@ -33,7 +37,7 @@ router.get("/", async (_req, res) => {
     res.send(carts);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al obtener los carritos");
+    res.status(500).send("Error to get the Carts");
   }
 });
 
@@ -48,7 +52,7 @@ router.post("/:cid/products/:pid", async (req, res) => {
     const cart = await cartManager.addProductToCart(cartId, productId, quantity);
     res.send(cart);
   } catch (error) {
-    res.status(404).send("Carrito no encontrado");
+    res.status(404).send("Carrito not found");
   }
 });
 
@@ -61,12 +65,12 @@ router.delete("/:cid/products/:pid", async (req, res) => {
     const cart = await cartManager.removeProductFromCart(cartId, productId);
     res.status(200).send({
       success: true,
-      message: "Producto eliminado del carrito",
+      message: "Producto deleted from cart",
       cart,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al eliminar el producto del carrito");
+    res.status(500).send("Error to delete the product from cart");
   }
 });
 
@@ -80,7 +84,7 @@ router.put("/:cid", async (req, res) => {
     res.send(cart);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al actualizar el carrito");
+    res.status(500).send("Error to update the cart");
   }
 });
 
@@ -95,7 +99,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
     res.send(cart);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al actualizar la cantidad del producto");
+    res.status(500).send("Error to update the product quantity");
   }
 });
 
@@ -107,11 +111,11 @@ router.delete("/:cid", async (req, res) => {
     await cartManager.clearCart(cartId);
     res.send({
       success: true,
-      message: "Carrito vaciado",
+      message: "Cart emptied",
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al vaciar el carrito");
+    res.status(500).send("Error to clear the cart");
   }
 });
 
