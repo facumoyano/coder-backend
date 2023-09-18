@@ -1,0 +1,30 @@
+<h1 class="title">Login</h1>
+
+<div class="auth-container">
+  <form method="post" action="/api/sessions/login" class="form">
+   
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" />
+
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" />
+
+    <button type="submit" class="button">Login</button>
+  </form>
+  <span style="margin-top: 16px;"><a
+      href="/register"
+      target="_self"
+    >Register</a></span>
+</div>
+
+{{#if loginFailed}}
+    <script type="text/javascript">
+        alert('Login Failed!');
+    </script>
+{{/if}}
+
+{{#if registerSuccess}}
+    <script type="text/javascript">
+        alert('Register Success!');
+    </script>
+{{/if}}

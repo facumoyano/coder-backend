@@ -16,6 +16,21 @@ body {
   background-color: #edeff4;
 }
 
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+form label {
+    margin-top: 4px;
+}
+
+a {
+    color: #111;
+}
+
 .button {
     padding: 8px;
     border: 1px solid #ccc;
@@ -40,6 +55,12 @@ input, select {
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #fff;
+}
+
+.role {
+    text-align: center;
+    font-size: 24px;
+    display: block;
 }
 
 .header {
@@ -167,16 +188,6 @@ input, select {
    margin: 16px 0;
 }
 
-.socket-container .add-product-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.socket-container .add-product-form form label {
-    margin-top: 4px;
-}
-
 .socket-container .product-container, .add-product-form {
     width: 100%;
 }
@@ -225,8 +236,9 @@ input, select {
     font-weight: 400;
 }
 
-/* CHAT PAGE */
-.chat input {
-
+/* REGISTER LOGIN PAGES */
+.auth-container {
+    max-width: 500px;
+    margin: 0 auto;
 }
 
