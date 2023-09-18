@@ -3,12 +3,16 @@ import handlebars from "express-handlebars";
 import cartsRouter from "./routes/carts.js";
 import productsRouter from "./routes/products.js";
 import viewsRouter from "./routes/views.js";
+import userRouter from './routes/users.js';
 import {__dirname} from "./utils/constants.js";
 import { Server } from "socket.io";
 import mongoose from 'mongoose';
 import Message from "./dao/models/messageModel.js";
 import dotenv from 'dotenv';
 import path from 'path';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import mongoStore from 'connect-mongo';
 
 const app = express();
 dotenv.config();
@@ -16,7 +20,7 @@ dotenv.config();
 const uri = process.env.MONGODB_URI;
 const PORT = 8080;
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri)
   .then(() => {
     console.log('Conexión exitosa a MongoDB');
   })
@@ -53,9 +57,20 @@ app.set("view engine", "handlebars");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, '../public')));
+app.use(cookieParser());
+app.use(session({
+  store: new mongoStore({
+    mongoUrl: uri,
+    ttl: 1800,
+  }),
+  secret: process.env.SECRET_SESSION_KEY,
+  resave:false,
+  saveUnitialized: false
+}))
 
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use('/api/sessions', userRouter);
 app.use("/", viewsRouter);
 
 io.on("connection", (socket) => {
