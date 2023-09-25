@@ -1,6 +1,6 @@
 function auth(req, res, next) {
     if(req.session && req.session.user) {
-        if(req.session.user.email === 'adminCoder@coder.com') {
+        if(req.session.user.username === 'facumoyano') {
             req.session.user.role = 'admin';
         } else {
             req.session.user.role = 'usuario';

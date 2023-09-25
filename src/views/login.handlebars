@@ -3,13 +3,14 @@
 <div class="auth-container">
   <form method="post" action="/api/sessions/login" class="form">
    
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email" />
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" />
 
     <label for="password">Password</label>
     <input type="password" name="password" id="password" />
 
     <button type="submit" class="button">Login</button>
+    <a href="/api/sessions/github" class="button">Login with Github</a>
   </form>
   <span style="margin-top: 16px;"><a
       href="/register"

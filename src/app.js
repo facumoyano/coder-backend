@@ -4,6 +4,7 @@ import cartsRouter from "./routes/carts.js";
 import productsRouter from "./routes/products.js";
 import viewsRouter from "./routes/views.js";
 import userRouter from './routes/users.js';
+import sessionsRouter from './routes/sessions.js';
 import {__dirname} from "./utils/constants.js";
 import { Server } from "socket.io";
 import mongoose from 'mongoose';
@@ -13,6 +14,8 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import mongoStore from 'connect-mongo';
+import initializePassport from "./config/passportConfig.js";
+import passport from "passport";
 
 const app = express();
 dotenv.config();
@@ -68,9 +71,14 @@ app.use(session({
   saveUnitialized: false
 }))
 
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use('/api/sessions', userRouter);
+app.use('/api/sessions', sessionsRouter);
 app.use("/", viewsRouter);
 
 io.on("connection", (socket) => {
