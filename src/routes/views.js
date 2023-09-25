@@ -153,6 +153,7 @@ router.get("/login", logged, async (req,res) => {
 })
 
 router.get("/register", logged, async (req, res) => {
+  console.log(req.session)
   res.render("register", {
     registerFailed: req.session.registerFailed ?? false,
   });

@@ -7,6 +7,7 @@ const router = Router();
 router.post("/register", async (req, res) => {
     try {
         await US.createUser(req.body);
+        console.log(req.body)
         req.session.registerSuccess = true;
         res.redirect("/login");
     } catch (error) {
@@ -17,10 +18,11 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const { email, password} = req.body;
-        const { first_name, last_name, age } = await US.login(email, password);
+        const { username, password} = req.body;
+        const { name } = await US.login(username, password);
+        console.log(username, password)
 
-        req.session.user = {first_name, last_name, email, age};
+        req.session.user = {username, name};
         req.session.loginFailed = false;
         res.redirect("/");
     } catch (error) {

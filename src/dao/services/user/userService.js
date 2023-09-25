@@ -12,9 +12,10 @@ class UserService {
         }
     }
 
-    async login(email, password) {
+    async login(username, password) {
         try {
-            const user = await userModel.find({email: email});
+            const user = await userModel.find({username: username});
+            console.log(isValidPassword(user[0], password));
 
             if (user.length > 0 && isValidPassword(user[0], password)) {
                 return user[0];
