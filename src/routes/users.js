@@ -13,19 +13,20 @@ router.post("/register", async (req, res) => {
     } catch (error) {
         req.session.registerFailed = true;
         res.redirect("/register");
+        console.error(error)
     }
 });
 
 router.post("/login", async (req, res) => {
     try {
-        const { username, password} = req.body;
-        const { name } = await US.login(username, password);
-        console.log(username, password)
+        const { email, password} = req.body;
+        const { first_name, last_name } = await US.login(email, password);
 
-        req.session.user = {username, name};
+        req.session.user = {email, first_name, last_name};
         req.session.loginFailed = false;
         res.redirect("/");
     } catch (error) {
+        console.error(error)
         req.session.loginFailed = true;
         req.session.registerSuccess = false;
         res.redirect("/login");

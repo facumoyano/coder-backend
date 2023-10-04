@@ -1,6 +1,7 @@
 import userModel from "../../models/userModel.js";
 import {createHash, isValidPassword} from '../../../utils/functions.js';
 
+
 class UserService {
 
     async createUser(user) {
@@ -12,10 +13,9 @@ class UserService {
         }
     }
 
-    async login(username, password) {
+    async login(email, password) {
         try {
-            const user = await userModel.find({username: username});
-            console.log(isValidPassword(user[0], password));
+            const user = await userModel.find({email: email});
 
             if (user.length > 0 && isValidPassword(user[0], password)) {
                 return user[0];
@@ -26,6 +26,10 @@ class UserService {
         } catch (error) {
             throw new Error(error.message.replace(/"/g, "'"));
         }
+    }
+
+    async findOne(query) {
+        return userModel.findOne(query);
     }
 
 }

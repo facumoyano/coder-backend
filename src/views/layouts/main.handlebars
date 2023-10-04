@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
+    {{#if user}}
     <header class="header">
         <navbar class="navbar">
             <a href="/">Home</a>
@@ -21,6 +22,7 @@
             </a>
         </navbar>
     </header>
+    {{/if}}
     <div class="container">
         {{{body}}}
     </div>

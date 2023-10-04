@@ -1,4 +1,5 @@
 import Cart from "../../models/cartModel.js";
+import userModel from "../../models/userModel.js";
 
 class CartDBService {
   async createCart() {
@@ -36,7 +37,7 @@ class CartDBService {
     }
   }
 
-  async addProductToCart(id, productId, quantity = 1) {
+  async addProductToCart(userId, id, productId, quantity = 1) {
     try {
       const cart = await Cart.findById(id);
       if (cart) {
