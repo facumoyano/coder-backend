@@ -1,13 +1,13 @@
 import {Router} from 'express';
 import UserService from '../dao/services/user/userService.js';
+import passport from 'passport';
+
 
 const US = new UserService();
 const router = Router();
 
-router.post("/register", async (req, res) => {
+router.post("/register", passport.authenticate('register',{failureRedirect: '/register'}), async (req, res) => {
     try {
-        await US.createUser(req.body);
-        console.log(req.body)
         req.session.registerSuccess = true;
         res.redirect("/login");
     } catch (error) {
@@ -17,20 +17,9 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password} = req.body;
-        const { first_name, last_name } = await US.login(email, password);
-
-        req.session.user = {email, first_name, last_name};
-        req.session.loginFailed = false;
-        res.redirect("/");
-    } catch (error) {
-        console.error(error)
-        req.session.loginFailed = true;
-        req.session.registerSuccess = false;
-        res.redirect("/login");
-    }
+router.post("/login", passport.authenticate('login', {failureRedirect: '/login'}), (req, res) => {
+    req.session.user = req.user;
+    res.redirect("/");
 });
 
 router.get("/logout", (req, res) => {

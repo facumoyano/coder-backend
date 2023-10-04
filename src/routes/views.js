@@ -146,6 +146,7 @@ router.delete("/products/:pid", auth, (req, res) => {
 });
 
 router.get("/login", logged, async (req,res) => {
+  req.session.registerSuccess = false;
   res.render('login', {
     loginFailed: req.session.loginFailed ?? false,
     registerSuccess: req.session.registerSuccess ?? false
