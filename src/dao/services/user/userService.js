@@ -6,7 +6,6 @@ class UserService {
 
     async createUser(user) {
         try {
-            user.password = createHash(user.password);
             return await userModel.create(user);
         } catch (error) {
             throw new Error(error.message.replace(/"/g, "'"));
