@@ -2,15 +2,15 @@ import { url } from "../../../utils/constants.js";
 import Product from "../../models/productModel.js";
 
 class ProductDBService {
-  async addProduct(product) {
+  async addProduct(productData) {
     try {
-      const existingProduct = await Product.findOne({ code: product.code });
+      const existingProduct = await Product.findOne({ code: productData.code });
       if (existingProduct) {
-        return "A product with the same code already exists";
+        throw new Error("A product with the same code already exists");
       }
 
       const newProduct = new Product({
-        ...product,
+        ...productData,
         status: true,
       });
 
@@ -18,8 +18,10 @@ class ProductDBService {
       return newProduct;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
+
 
   async getProducts(page = 1, limit = 10, sort, category, available, urlPath, title) {
     try {
